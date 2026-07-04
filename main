@@ -1,0 +1,880 @@
+#include<iostream>
+#include<windows.h>
+using namespace std;
+#include<conio.h>
+#include<math.h>
+#include<fstream>
+
+bool bishop(bool turn, char B[], int dim, int score, int scorei);
+void gotoRowCol(int rpos, int cpos)
+{
+	int xpos=cpos, ypos = rpos;
+	COORD scrn;
+	HANDLE hOuput = GetStdHandle(STD_OUTPUT_HANDLE);
+	scrn.X = cpos;
+	scrn.Y = rpos;
+	SetConsoleCursorPosition(hOuput, scrn);
+}
+void sleep(int m)
+{
+        for(int j=0;j<m*21000;j++)
+        {
+
+        }
+}
+bool pawn(bool turn,char B[],int dim,int score,int scorei)
+{
+    char ch=' ';
+   if(turn==0)
+    {
+        if((scorei>score)&&(scorei>score+dim-2))
+       {
+
+        if(B[scorei]!=ch &&scorei-score==dim)
+        {
+            return false;
+        }
+
+
+       if(((score<18&&score>7)&&(B[scorei]==ch))&&((scorei==score+dim)||(scorei==score+(2*dim))))
+        {
+            return true;
+
+         }
+
+
+           else if(((B[scorei]==ch)&&(scorei-score==dim))&&scorei<=dim*dim)
+        {
+            return true;
+        }
+
+         else if(((scorei==score +dim-1)||(score+dim+1))&&((B[scorei]!=ch)&&(B[scorei]!=ch)&&(B[scorei]!=ch)&&(B[scorei]!='B')&&(B[scorei]!='N')&&(B[scorei]!=' R')&&(B[scorei]!='K')&&(B[scorei]!='Q')&&(B[scorei]!='P'))&&scorei<=dim*dim)
+         {
+
+             if((score==(dim-1))||(score==(3*dim-1))||(score==(4*dim-1))||(score==(2*dim-1))||(score==(5*dim-1))||(score==(6*dim-1))||(score==(7*dim-1)))
+        {
+
+          if((scorei==score+dim-1)&&(B[scorei]!=' '))
+         {
+           return true;
+         }
+         else {return false;}
+        }
+         else if(((score==(7*dim))||(score==(6*dim))||(score==(5*dim))||(score==(4*dim))||(score==(3*dim))||(score==(2*dim))||(score==(dim))))
+          {
+
+         if ((scorei==score+dim+1)&&(B[scorei]!=' '))
+        {
+            return true;
+
+        }
+        else{
+            return false;
+        }
+        }
+        }
+          else
+         {
+             return false;
+         }
+    }
+    else
+    {return false;
+    }
+    }
+
+    if(turn==1)
+   {
+       if((scorei<score)&&(scorei <score-dim+2 ))
+      {
+
+
+
+       if(((score<56&&score>47)&&B[scorei]==ch)&&(scorei==score-dim)&&(scorei-dim <score))
+
+       {
+           return true;
+       }
+
+     else  if(((score<56&&score>47)&&B[scorei]==ch)&&((scorei==score-2*dim)&&(scorei-dim <score)))
+
+       {
+           return true;
+       }
+        else  if(B[scorei]!=ch &&score-scorei==dim)
+        {
+            return false;
+        }
+       else if( B[scorei]==ch &&score-scorei==dim)
+       {
+           return true;
+       }
+else if(((scorei==score +dim-1)||(score+dim+1))&&((B[scorei]!=ch)&&(B[scorei]!=ch)&&(B[scorei]!=ch)&&(B[scorei]!='b')&&(B[scorei]!='n')&&(B[scorei]!=' r')&&(B[scorei]!='k')&&(B[scorei]!='q')&&(B[scorei]!='p'))&&scorei<=dim*dim)
+         {
+        if((score!=(2*dim-1))&&(score!=(3*dim-1))&&(score!=(4*dim-1))&&(score!=(2*dim-1))&&(score!=(5*dim-1))&&(score!=(6*dim-1))&&(score!=(7*dim-1))&&((score!=(7*dim))&&(score!=(6*dim))&&(score!=(5*dim))&&(score!=(4*dim))&&(score!=(3*dim))&&(score!=(2*dim))&&(score!=(dim))))
+        {
+
+          if( ((scorei==score-dim-1)||(score-dim+1))&&(B[scorei]!=' '))
+         {
+           return true;
+         }
+        }
+          else if(((B[scorei]==' ')&&(scorei+dim==score))&&scorei >=0 )
+        {
+            return true;
+
+        }
+
+
+
+         else if((score==(dim-1))||(score==(3*dim-1))||(score==(4*dim-1))||(score==(2*dim-1))||(score==(5*dim-1))||(score==(6*dim-1))||(score==(7*dim-1)))
+        {
+
+          if((scorei==score-dim-1)&&(B[scorei]!=' '))
+         {
+           return true;
+         }
+
+         else if(((score==(7*dim))||(score==(6*dim))||(score==(5*dim))||(score==(4*dim))||(score==(3*dim))||(score==(2*dim))||(score==(dim))))
+          {
+
+         if ((scorei==score-dim+1)&&(B[scorei]!=' '))
+        {
+            return true;
+
+        }
+        else{
+            return 0;
+        }
+          }
+         }
+
+
+         else
+         {
+             return false;
+         }
+   }
+   else
+   {
+       return false;
+   }
+
+
+   }
+}}
+
+bool rook(bool turn,char B[],int dim,int score,int scorei)
+{
+
+     char ch = ' ';
+    int rowDiff = scorei / dim - score / dim;
+    int colDiff = scorei % dim - score % dim;
+    int small;
+    int large;
+   if(scorei>score)
+   {
+     large=scorei;
+     small= score;
+   }
+   else{
+    large=score;
+    small=scorei;
+   }
+
+if(turn==0)
+{
+
+if(scorei>=0&&scorei<dim*dim)
+{
+    if((B[scorei]!='P')&&(B[scorei]!='K')&&(B[scorei]!='Q')&&(B[scorei]!='N')&&(B[scorei]!='B')&&(B[scorei]!='R'))
+  {
+
+
+    if (rowDiff == 0 )
+     {
+        for (int i = small + 1; i < large; ++i)
+            {
+            if (B[i] != ch) {
+                return false;
+            }
+        }
+    }
+
+if (colDiff == 0)
+    {
+        for (int i = small + dim; i < large; i+=dim)
+         {
+            if (B[i] != ch)
+             {
+                return false;
+            }
+        }
+
+}
+    if((scorei==score+dim)||(scorei==score+2*dim)||(scorei==score+3*dim)||(scorei==score+4*dim)||(scorei==score+5*dim)||(scorei==score+6*dim)||(scorei==score+7*dim)||(scorei==score-dim)||(scorei==score-2*dim)||(scorei==score-3*dim)||(scorei==score-4*dim)||(scorei==score-5*dim)||(scorei==score-6*dim)||(scorei==score-7*dim)||(scorei==score-8*dim))
+           {
+               return true;
+           }
+        else if(((scorei==score+1)||(scorei==score+2)||(scorei==score+3)||(scorei==score+4)||(scorei==score+5)||(scorei==score+6)||(scorei==score+7))||((scorei==score-1)||(scorei==score-2)||(scorei==score-3)||(scorei==score-4)||(scorei==score-5)||(scorei==score-6)||(scorei==score-7))  )
+
+      {
+    return true;
+      }
+  }
+      else
+        {
+        return false;
+        }
+    }}
+
+
+if(turn==1)
+{
+if(scorei>=0&&scorei<dim*dim)
+{
+    if(((B[scorei]!='p')&&(B[scorei]!='k')&&(B[scorei]!='q')&&(B[scorei]!='n')&&(B[scorei]!='b')&&(B[scorei]!='r')))
+    {
+    if (rowDiff == 0 )
+     {
+        for (int i = small + 1; i < large; ++i)
+            {
+            if (B[i] != ch)
+                {
+                return false;
+            }
+        }
+    }
+
+else if (colDiff == 0)
+    {
+        for (int i = small + dim; i < large; i+=dim)
+         {
+            if (B[i] != ch)
+             {
+                return false;
+            }
+        }
+    }
+
+      else  if((scorei==score+dim)||(scorei==score+2*dim)||(scorei==score+3*dim)||(scorei==score+4*dim)||(scorei==score+5*dim)||(scorei==score+6*dim)||(scorei==score+7*dim)||(scorei==score-dim)||(scorei==score-2*dim)||(scorei==score-3*dim)||(scorei==score-4*dim)||(scorei==score-5*dim)||(scorei==score-6*dim)||(scorei==score-7*dim)||(scorei==score-8*dim))
+           {
+               return true;
+           }
+           else if(((scorei==score+1)||(scorei==score+2)||(scorei==score+3)||(scorei==score+4)||(scorei==score+5)||(scorei==score+6)||(scorei==score+7))||((scorei==score-1)||(scorei==score-2)||(scorei==score-3)||(scorei==score-4)||(scorei==score-5)||(scorei==score-6)||(scorei==score-7))  )
+
+      {
+     return  true;
+      }
+    }
+
+    else
+    {
+    return false  ;
+    }
+
+ }
+ }
+}
+
+
+bool  knight(bool turn,char B[],int dim,int score,int scorei)
+{
+
+ if(scorei>=0&&scorei<dim*dim)
+    {if(turn==0)
+    {
+
+        if((B[scorei]!='K')&&(B[scorei]!='N')&&(B[scorei]!='R')&&(B[scorei]!='B')&&(B[scorei]!='Q')&&(B[scorei]!='P'))
+        {
+
+          if(((scorei==score+6)||(scorei==score+10))||((scorei==score+15)||(scorei==score+17))||((scorei==score-6)||(scorei==score-10))||((scorei==score-15)||((scorei==score-17))))
+           {
+               return true;
+           }
+
+        else
+            {
+                return false;
+            }
+
+          }
+        else
+        {
+            return false;
+        }
+
+    }
+
+    if(turn==1)
+    {
+            if((B[scorei]!='k')&&(B[scorei]!='n')&&(B[scorei]!='r')&&(B[scorei]!='b')&&(B[scorei]!='q')&&(B[scorei]!='p'))
+        {
+
+          if(((scorei==score+6)||(scorei==score+10))||((scorei==score+15)||(scorei==score+17))||((scorei==score-6)||(scorei==score-10))||((scorei==score-15)||(scorei==score-17)))
+           {
+               return true;
+           }
+
+        else
+            {
+                return false;
+            }
+
+          }
+        else
+        {
+            return false;
+        }
+    }
+}
+
+
+}
+
+
+
+bool king(bool turn, char B[], int dim, int score, int scorei)
+{
+    if (turn == 0)
+    {
+        if ((B[scorei] != 'Q') && (B[scorei] != 'P') && (B[scorei] != 'B') && (B[scorei] != 'N') && (B[scorei] != 'R'))
+        {
+            int rowDiff = (scorei / dim - score / dim);
+            if(rowDiff<0)
+            {
+                rowDiff*-1;
+            }
+            int colDiff = (scorei % dim - score % dim);
+             if(colDiff<0)
+            {
+                colDiff*-1;
+            }
+            return (rowDiff <= 1 && colDiff <= 1);
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else if (turn == 1)
+    {
+        if ((B[scorei] != 'q') && (B[scorei] != 'p') && (B[scorei] != 'b') && (B[scorei] != 'n') && (B[scorei] != 'r'))
+        {
+           int rowDiff = (scorei / dim - score / dim);
+            if(rowDiff<0)
+            {
+                rowDiff*-1;
+            }
+           int  colDiff = (scorei % dim - score % dim);
+             if(colDiff<0)
+            {
+                colDiff*-1;
+            }
+            return (rowDiff <= 1 && colDiff <= 1);
+        }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
+
+bool queen(bool turn, char B[], int dim, int score, int scorei)
+{
+    if (turn == 0)
+    {
+        if ((B[scorei] != 'Q') && (B[scorei] != 'P') && (B[scorei] != 'B') && (B[scorei] != 'N') && (B[scorei] != 'R'))
+        {
+
+           if( king(turn,B,dim,score,scorei))
+           {
+               return true;
+           }
+           else if( rook(turn,B,dim,score,scorei))
+                   {
+                       return true;
+                   }
+                   else if( bishop(turn,B,dim,score,scorei))
+                   {
+                       return true;
+                   }
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else if (turn == 1)
+    {
+        if ((B[scorei] != 'q') && (B[scorei] != 'p') && (B[scorei] != 'b') && (B[scorei] != 'n') && (B[scorei] != 'r'))
+        {
+
+             if( king(turn,B,dim,score,scorei))
+           {
+               return true;
+           }
+           else if( rook(turn,B,dim,score,scorei))
+                   {
+                       return true;
+                   }
+        {
+            return false;
+        }
+    }
+
+
+
+    }}
+
+bool bishop(bool turn, char B[], int dim, int score, int scorei)
+{
+    char ch = ' ';
+    int rowDiff = (scorei / dim -  score / dim);
+    int colDiff =    (scorei  % dim - score % dim);
+if(rowDiff>=0)
+{
+
+}
+else{
+  rowDiff=rowDiff*-1;
+}
+if(colDiff>=0)
+{
+
+}
+else{
+   colDiff= colDiff*-1;
+}
+    if (rowDiff == colDiff)
+    {
+
+            int small, large;
+
+
+    if (scorei > score)
+        {
+            large = scorei;
+            small = score;
+        }
+        else
+        {
+            large = score;
+            small = scorei;
+        }
+
+        for (int i = small + dim + 1; i < large; i += dim + 1)
+        {
+            if (B[i] != ch)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+void print_board(int dim)
+
+   {  char k =219;
+     gotoRowCol(0,0);
+    for(int i=0; i<=dim*4;i++)
+    {
+        for(int j=0;j<dim*4;j++)
+        {
+            gotoRowCol(i,j);
+            cout<<k;
+        }
+        i=i+3;
+    }
+       for(int i=0; i<=dim*4;i++)
+    {
+        for(int j=0;j<=dim*4;j++)
+        {
+            gotoRowCol(j,i);
+            cout<<k;
+        }
+        i=i+3;
+    }
+    int number=1;
+     for(int i=2;i<dim*4;i=i+4)
+        {
+            gotoRowCol(i,34);
+            cout<<number;
+            number++;
+
+        }
+        number=1;
+        for(int i=2;i<dim*4;i=i+4)
+        {
+            gotoRowCol(34,i);
+            cout<<number;
+            number++;
+
+        }
+
+}
+in_it(char B[])
+{
+   char ch=' ';
+
+    for(int i=16 ;i<48;i++)
+    {
+        B[i]=ch;
+    }
+    for(int i=8; i<16;i++)
+    {
+        B[i]='P';
+    }
+     for(int i=48; i<56;i++)
+    {
+        B[i]='p';
+    }
+    B[0]='R';
+     B[1]='N'; B[2]='B'; B[3]='Q'; B[4]='K'; B[5]='B'; B[6]='N'; B[7]='R';
+      B[56]='r'; B[57]='n'; B[58]='b'; B[59]='q'; B[60]='k'; B[61]='b'; B[62]='n'; B[63]='r';
+
+
+}
+void print_array(char B[])
+{   gotoRowCol(2,0);
+    int n=0;
+    int l=2;
+    int m=2;
+
+     for(int i=2 ;i<10;i++)
+     {
+         for(int j=4;j<12;j++)
+         {
+             gotoRowCol(l,m);
+             cout<<B[n];
+             m=m+4;
+             n++;
+         }
+         l=l+4;
+         m=2;
+     }
+
+
+}
+void change_turn(bool &turn)
+{
+    if(turn==0)
+    {
+        turn=1;
+    }
+    else
+        turn=0;
+}
+void two_oned(int r, int c,int ri,int ci ,int dim, int &score,int &scorei)
+{
+    score= ((r-1)*dim)+(c-1);
+     scorei= ((ri-1)*dim)+(ci-1);
+
+}
+void select_p(char B[], int score,int scorei)
+{
+
+     B[scorei]=B[score];
+    B[score]=' ';
+
+}
+void ask_for_move(int &r,int &c ,int &ri ,int &ci,int score,int scorei,char B[],bool turn,int dim)
+{
+
+    gotoRowCol(37,37);
+    cout<<"enter row .................:";
+    cin>>r;
+    gotoRowCol(38,37);
+    cout<<"enter column ...............:";
+    cin>>c;
+      gotoRowCol(39,37);
+    cout<<"enter row .................:";
+    cin>>ri;
+    gotoRowCol(40,37);
+    cout<<"enter column ...............:";
+    cin>>ci;
+
+    two_oned(r,c,ri,ci,dim,score,scorei);
+    if((B[score]=='p')||(B[score]=='P'))
+   {
+       if(pawn(turn,B,dim,score,scorei))
+        {
+          select_p(B,score,scorei);
+         }
+     else{
+         ask_for_move(r,c,ri,ci,score,scorei,B,turn,dim);
+          }
+
+}
+else if((B[score]=='r')||(B[score]=='R'))
+        {
+            if(rook(turn,B,dim,score,scorei))
+            {
+              select_p(B,score,scorei);
+            }
+            else
+                {
+                ask_for_move(r,c,ri,ci,score,scorei,B,turn,dim);
+
+            }
+        }
+        else if((B[score]=='n')||(B[score]=='N'))
+        {
+            if(knight(turn,B,dim,score,scorei))
+            {
+              select_p(B,score,scorei);
+            }
+            else
+                {
+                ask_for_move(r,c,ri,ci,score,scorei,B,turn,dim);
+
+            }
+        }
+         else if((B[score]=='k')||(B[score]=='K'))
+        {
+            if(king(turn,B,dim,score,scorei))
+            {
+              select_p(B,score,scorei);
+            }
+            else
+                {
+                ask_for_move(r,c,ri,ci,score,scorei,B,turn,dim);
+
+            }
+        }
+        else if((B[score]=='q')||(B[score]=='Q'))
+        {
+            if(queen(turn,B,dim,score,scorei))
+            {
+              select_p(B,score,scorei);
+            }
+            else
+                {
+                ask_for_move(r,c,ri,ci,score,scorei,B,turn,dim);
+
+            }
+        }
+        else if((B[score]=='b')||(B[score]=='B'))
+        {
+            if(bishop(turn,B,dim,score,scorei))
+            {
+              select_p(B,score,scorei);
+            }
+            else
+                {
+                ask_for_move(r,c,ri,ci,score,scorei,B,turn,dim);
+
+            }
+        }
+
+else
+    {
+    ask_for_move(r,c,ri,ci,score,scorei,B,turn,dim);
+   }
+}
+
+
+
+
+void start_(int &start)
+{   gotoRowCol(1,5);
+char ck=219;
+
+    system("cls");
+     gotoRowCol(3,55);
+     cout<<ck<<ck<<ck<<"   "     <<ck<<"   "<<ck<<"  "      <<ck<<ck<<ck<<ck<<"   "         <<ck<<ck<<ck<<ck<<"  "<<ck<<ck<<ck<<ck;
+     gotoRowCol(4,55);
+     cout<<ck<<"     "           <<ck<<"   "<<ck<<"  "       <<ck<<ck<<"     "               <<ck<<"     "       <<ck;
+     gotoRowCol(5,55);
+     cout<<ck<<"     "          <<ck<<ck<<ck<<ck<<ck<<"  "   <<ck<<ck<<ck<<ck<<"   "        <<ck<<ck<<ck<<ck<<"  "<<ck<<ck<<ck<<ck;
+gotoRowCol(6,55);
+    cout<<ck<<"     "            <<ck<<"   "<<ck<<"  "        <<ck<<ck<<"        "                      <<ck<< "     "      <<ck;
+    gotoRowCol(7,55);
+    cout<<ck<<ck<<ck<<"   "      <<ck<<"   "<<ck<<"  "        <<ck<<ck<<ck<<ck<<"   "      <<ck<<ck<<ck<<ck<<"  "<<ck<<ck<<ck<<ck;
+
+gotoRowCol(10,65);
+cout<<" P L A Y";
+
+gotoRowCol(12,64);
+cout<<" NEW  GAME              press   (1)";
+gotoRowCol(14,64);
+cout<<" LOAD  GAME             press   (2)";
+gotoRowCol(16,66);
+cout<<"  QUIT                  press  ( Alt + F4)";
+cin>>start;
+system("cls");
+
+}
+void load_game(char B[], int dim) {
+    char temp = '_';
+    char tempi = ' ';
+    char k;
+    ifstream read("board.txt");
+
+    if (!read.is_open()) {
+        cout << "Error in file";
+    } else {
+        for (int i = 0; i < dim * dim; i++) {
+            read >> k;
+
+            if (k == temp)
+                {
+                   k=tempi;
+                }
+            else {
+                    k=k;
+                }
+            B[i] = k;
+        }
+    }
+    read.close();
+}
+
+void load_turn(bool &turn)
+{
+
+    ifstream r("turn.txt");
+    if (r.is_open()) {
+        r >> turn;
+        r.close();
+    } else {
+        cout << "Error loading turn";
+    }
+}
+void wincheck(char B[],int dim,bool &game)
+{
+
+    int k=0;
+    int K=0;char ck =219;
+
+    for (int i=0;i<dim*dim;i++)
+    {
+        if(B[i]=='K')
+        {
+            K=K+1;
+        }
+         if(B[i]=='k')
+        {
+            k=k+1;
+        }
+    }
+    if(k==0)
+    {  system("cls");
+        cout<<"player   ABC  win ................... player abc loose";
+        game=0;
+
+     gotoRowCol(3,55);
+     cout<<ck<<ck<<ck<<"   "     <<ck<<"   "<<ck<<"  "      <<ck<<ck<<ck<<ck<<"   "         <<ck<<ck<<ck<<ck<<"  "<<ck<<ck<<ck<<ck;
+     gotoRowCol(4,55);
+     cout<<ck<<"     "           <<ck<<"   "<<ck<<"  "       <<ck<<ck<<"     "               <<ck<<"     "       <<ck;
+     gotoRowCol(5,55);
+     cout<<ck<<"     "          <<ck<<ck<<ck<<ck<<ck<<"  "   <<ck<<ck<<ck<<ck<<"   "        <<ck<<ck<<ck<<ck<<"  "<<ck<<ck<<ck<<ck;
+gotoRowCol(6,55);
+    cout<<ck<<"     "            <<ck<<"   "<<ck<<"  "        <<ck<<ck<<"        "                      <<ck<< "     "      <<ck;
+    gotoRowCol(7,55);
+    cout<<ck<<ck<<ck<<"   "      <<ck<<"   "<<ck<<"  "        <<ck<<ck<<ck<<ck<<"   "      <<ck<<ck<<ck<<ck<<"  "<<ck<<ck<<ck<<ck;
+    }
+  else  if(K==0)
+    {  system("cls");
+        cout<<"player   abc  win ................... player ABC loose";
+        game=0;
+
+     gotoRowCol(3,55);
+     cout<<ck<<ck<<ck<<"   "     <<ck<<"   "<<ck<<"  "      <<ck<<ck<<ck<<ck<<"   "         <<ck<<ck<<ck<<ck<<"  "<<ck<<ck<<ck<<ck;
+     gotoRowCol(4,55);
+     cout<<ck<<"     "           <<ck<<"   "<<ck<<"  "       <<ck<<ck<<"     "               <<ck<<"     "       <<ck;
+     gotoRowCol(5,55);
+     cout<<ck<<"     "          <<ck<<ck<<ck<<ck<<ck<<"  "   <<ck<<ck<<ck<<ck<<"   "        <<ck<<ck<<ck<<ck<<"  "<<ck<<ck<<ck<<ck;
+gotoRowCol(6,55);
+    cout<<ck<<"     "            <<ck<<"   "<<ck<<"  "        <<ck<<ck<<"        "                      <<ck<< "     "      <<ck;
+    gotoRowCol(7,55);
+    cout<<ck<<ck<<ck<<"   "      <<ck<<"   "<<ck<<"  "        <<ck<<ck<<ck<<ck<<"   "      <<ck<<ck<<ck<<ck<<"  "<<ck<<ck<<ck<<ck;
+    }
+    else
+    {
+        game=1;
+    }
+
+}
+
+
+int main()
+{
+    int r,c,ri,ci;
+    int dim =8;
+    int score;
+ int scorei;
+    char B[64];
+    bool turn=0;
+  bool game=1;
+
+    char pi,pii;
+    int start;
+    in_it(B);
+    start_(start);
+   if(start==1)
+    {
+        in_it(B);
+    }
+    else if(start==2)
+    {
+        load_game(B,dim);
+        load_turn(turn);
+    }
+    else
+      {
+
+      system("cls");
+        cout<<" invalid commmand "<<endl;
+            game=0;
+    }
+
+while(game)
+{
+    ofstream write("board.txt");
+   if(write.is_open())
+   {
+
+    for(int i=0;i<dim*dim;i++)
+    {  char temp=' ';
+    char  tempi='_';
+    if(B[i]==temp)
+    {
+        write<<tempi;
+    }
+    else{
+        write<<B[i];
+    }
+
+    }
+    write.close();
+   }
+   else
+   {
+       cout<<" file not opened";
+   }
+    ofstream w("turn.txt");
+    if (w.is_open()) {
+        w << turn;
+        w.close();
+    } else {
+        cout << "Error saving turn";
+    }
+    print_array(B);
+    print_board(dim);
+   ask_for_move(r,c,ri,ci,score,scorei,B,turn,dim);
+
+change_turn(turn);
+
+  system("cls");
+  wincheck(B,dim,game);
+
+}
+    return 0;
+}
